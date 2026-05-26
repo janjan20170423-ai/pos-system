@@ -1,10 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>好點點餐系統 - 菜單管理</title>
+
 <style>
-html,body{
+html, body{
     margin:0;
     width:100%;
     height:100%;
@@ -21,7 +23,38 @@ iframe{
 
 <body>
 
-<iframe src="https://script.google.com/macros/s/AKfycbzawdKUp6v5Jm-VQImAyh81k49QQdyfqGIo5UOc_8urpTVYehlJvMkmsHERqp-SFTE2MQ/exec?page=ManageMenu"></iframe>
+<iframe id="pageFrame" + "?page=ManageMenu"></iframe>
+
+<script>
+// Google 試算表 CSV
+const sheetUrl =
+"https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
+
+fetch(sheetUrl)
+.then(res => res.text())
+.then(csv => {
+
+    // 轉成每行
+    const rows = csv.split("\n");
+
+    // 找 ManageMenu.html
+    for(let i=1;i<rows.length;i++){
+
+        const cols = rows[i].split(",");
+
+        const fileName = cols[0]?.replace(/"/g,"").trim();
+        const url = cols[1]?.replace(/"/g,"").trim();
+
+        if(fileName === "ManageMenu.html"){
+
+            document.getElementById("pageFrame").src = url;
+
+            break;
+        }
+    }
+
+});
+</script>
 
 </body>
 </html>
