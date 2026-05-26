@@ -3,7 +3,7 @@
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>好點點餐系統 - 菜單管理</title>
+<title>好點點餐系統</title>
 
 <style>
 html, body{
@@ -23,9 +23,10 @@ iframe{
 
 <body>
 
-<iframe id="pageFrame" src="?page=ManageMenu"></iframe>
+<iframe id="pageFrame"></iframe>
 
 <script>
+
 // Google 試算表 CSV
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
@@ -34,26 +35,41 @@ fetch(sheetUrl)
 .then(res => res.text())
 .then(csv => {
 
-    // 轉成每行
+    // 分行
     const rows = csv.split("\n");
 
-    // 找 ManageMenu.html
+    // 從第2行開始
     for(let i=1;i<rows.length;i++){
 
         const cols = rows[i].split(",");
 
-        const fileName = cols[0]?.replace(/"/g,"").trim();
-        const url = cols[1]?.replace(/"/g,"").trim();
+        // A欄
+        const fileName =
+            cols[0]?.replace(/"/g,"").trim();
 
+        // B欄
+        const baseUrl =
+            cols[1]?.replace(/"/g,"").trim();
+
+        // C欄
+        const page =
+            cols[2]?.replace(/"/g,"").trim();
+
+        // 組合 URL
+        const finalUrl = baseUrl + page;
+
+        // 指定要讀哪個檔案
         if(fileName === "ManageMenu.html"){
 
-            document.getElementById("pageFrame").src = url;
+            document.getElementById("pageFrame").src =
+                finalUrl;
 
             break;
         }
     }
 
 });
+
 </script>
 
 </body>
