@@ -3,132 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML 固定資料修改器</title>
+    <title id="webTitle">這是原本固定的網頁標題</title>
+    
     <style>
+        /* 這裡定義你網頁原本的控制面板與樣式 */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            align-items: center;
         }
-        .panel {
-            flex: 1;
+
+        /* 控制面板樣式（可以自由隱藏或美化） */
+        #modifier-panel {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
         }
-        h2 { color: #333; margin-top: 0; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; }
-        input[type="text"], textarea {
+
+        h2 { margin-top: 0; color: #333; font-size: 18px; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; color: #666; }
+        input[type="text"] {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 14px;
         }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
+
+        /* 2. 這裡是你網頁原本的主體內容樣式 */
+        .content-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
             width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        button:hover { background-color: #0056b3; }
-        iframe {
-            width: 100%;
-            height: 400px;
-            border: 1px solid #ddd;
-            background: white;
-        }
+        #webHeading { color: #007bff; }
+        #webText { color: #555; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="panel">
-        <h2>✍️ 修改固定資料</h2>
+    <div id="modifier-panel">
+        <h2>✍️ 即時修改指定資料</h2>
         
-        <label for="inputTitle">網頁標題 (Title)：</label>
-        <input type="text" id="inputTitle" value="我的酷炫網站">
+        <label for="inputTitle">修改網頁標題 (Title)：</label>
+        <input type="text" id="inputTitle" value="這是原本固定的網頁標題">
 
-        <label for="inputHeading">大標題 (H1)：</label>
-        <input type="text" id="inputHeading" value="歡迎來到我的首頁">
+        <label for="inputHeading">修改大標題 (H1)：</label>
+        <input type="text" id="inputHeading" value="歡迎來到我的網站">
 
-        <label for="inputContent">內文描述：</label>
-        <textarea id="inputContent" rows="4">這是一段可以被修改的固定資料。請在左側輸入新內容。</textarea>
-
-        <button onclick="downloadHTML()">💾 下載修改後的 HTML</button>
+        <label for="inputText">修改內文 (P)：</label>
+        <input type="text" id="inputText" value="這是一段固定在 HTML 裡面的主要內容，你可以直接在上方輸入框改變我。">
     </div>
 
-    <div class="panel">
-        <h2>👀 即時預覽</h2>
-        <iframe id="preview"></iframe>
+
+    <div class="content-container">
+        <h1 id="webHeading">歡迎來到我的網站</h1>
+        
+        <p id="webText">這是一段固定在 HTML 裡面的主要內容，你可以直接在上方輸入框改變我。</p>
     </div>
+
 
     <script>
-        // 這裡放你原本「固定的 HTML 模板」
-        // 使用 ${title}, ${heading}, ${content} 當作替換變數
-        function generateHTML(title, heading, content) {
-            return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>${title}</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #eef2f3; }
-        h1 { color: #2c3e50; }
-        p { color: #34495e; font-size: 18px; }
-    </style>
-</head>
-<body>
-    <h1>${heading}</h1>
-    <p>${content}</p>
-</body>
-</html>
-            `.trim();
-        }
+        // 取得輸入框元素
+        const inputTitle = document.getElementById('inputTitle');
+        const inputHeading = document.getElementById('inputHeading');
+        const inputText = document.getElementById('inputText');
 
-        // 更新預覽畫面的功能
-        function updatePreview() {
-            const title = document.getElementById('inputTitle').value;
-            const heading = document.getElementById('inputHeading').value;
-            const content = document.getElementById('inputContent').value;
+        // 取得網頁中要被修改的指定目標
+        const webTitle = document.getElementById('webTitle');
+        const webHeading = document.getElementById('webHeading');
+        const webText = document.getElementById('webText');
 
-            const finalHTML = generateHTML(title, heading, content);
-            
-            const iframe = document.getElementById('preview');
-            const doc = iframe.contentDocument || iframe.contentWindow.document;
-            doc.open();
-            doc.write(finalHTML);
-            doc.close();
-        }
+        // 當輸入框內容改變時，立刻修改指定的 HTML 資料
+        inputTitle.addEventListener('input', function() {
+            webTitle.innerText = inputTitle.value;
+        });
 
-        // 監聽輸入框，只要打字就即時更新
-        document.getElementById('inputTitle').addEventListener('input', updatePreview);
-        document.getElementById('inputHeading').addEventListener('input', updatePreview);
-        document.getElementById('inputContent').addEventListener('input', updatePreview);
+        inputHeading.addEventListener('input', function() {
+            webHeading.innerText = inputHeading.value;
+        });
 
-        // 頁面載入時先初始化預覽
-        updatePreview();
-
-        // 下載檔案功能
-        function downloadHTML() {
-            const title = document.getElementById('inputTitle').value;
-            const heading = document.getElementById('inputHeading').value;
-            const content = document.getElementById('inputContent').value;
-            const finalHTML = generateHTML(title, heading, content);
-
-            const blob = new Blob([finalHTML], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'index.html'; // 下載下來的檔名
-            a.click();
-        }
+        inputText.addEventListener('input', function() {
+            webText.innerText = inputText.value;
+        });
     </script>
+
 </body>
 </html>
