@@ -3,86 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= config['title'] ?></title>
-    <!-- 從試算表動態讀取 Open Graph Meta 標籤 -->
-    <meta property="og:title" content="<?= config['og:title'] ?>">
-    <meta property="og:description" content="<?= config['og:description'] ?>">
-    <meta property="og:image" content="<?= config['og:image'] ?>">
-    <meta property="og:url" content="<?= config['og:url'] ?>">
-    <style>
-        body {
-            font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h2 { color: #333; margin-top: 0; text-align: center; }
-        .status {
-            padding: 10px;
-            background-color: #e3f2fd;
-            color: #0d47a1;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            text-align: center;
-        }
-        label { display: block; margin: 15px 0 5px; font-weight: bold; color: #555; }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 25px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        button:hover { background-color: #218838; }
-    </style>
-</head>
-<body>
-<h1 id="app-title">好點點餐系統</h1>
-    <p id="app-desc">歡迎使用</p>
-    <div class="container">
-        <h2>✍️ 修改 ManageMenu.html 固定資料</h2>
-        <div class="status" id="loadStatus">⏳ 正在載入原始 ManageMenu.html 範本...</div>
-        
-        <label for="inputTitle">要修改的網頁標題 (Title)：</label>
-        <input type="text" id="inputTitle" value="載入中...">
-
-        <label for="inputHeading">要修改的主標題 (H1)：</label>
-        <input type="text" id="inputHeading" value="載入中...">
-
-        <button onclick="saveAndDownload()">💾 儲存並下載新的 ManageMenu.html</button>
-    </div>
+    
+    <title>好點點餐系統</title>
+    <meta property="og:title" content="好點 POS 點餐推播">
+    <meta property="og:description" content="歡迎使用">
+    <meta property="og:image" content="https://janjan20170423-ai.github.io/pos-system/2026-05-28 15.41.19 janjan20170423-ai.github.io 47785fec6c5b1.jpg">
+    <meta property="og:url" content="https://janjan20170423-ai.github.io/pos-system/">
 
     <script>
-// 1. 設定你的 Google 試算表 ID
+        // 2. 設定你的 Google 試算表 ID 與工作表名稱
         const SPREADSHEET_ID = '1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw';
-        
-// 2. 設定你要指定的工作表名稱（例如：選單設定、Sheet2）
-const SHEET_NAME = 'Fbsh'; 
+        const SHEET_NAME = 'Fbsh'; 
 
-// 3. 組合完整的動態網址
-const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-        // 3. 透過 JavaScript 異步抓取試算表資料
+        // 3. 組合完整的動態網址
+        const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        
+        // 4. 透過 JavaScript 異步抓取試算表資料
         fetch(jsonUrl)
             .then(response => response.text())
             .then(data => {
@@ -94,20 +30,20 @@ const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/t
                 // 將試算表資料轉換為 Key-Value 物件
                 const config = {};
                 rows.forEach(row => {
+                    // 確保欄位有資料才讀取
                     const key = row.c[0] ? row.c[0].v : null;
                     const value = row.c[1] ? row.c[1].v : '';
-                    if (key) config[key.trim()] = value;
+                    if (key) config[key.toString().trim()] = value;
                 });
 
-                // 4. 動態更新網頁的 Meta 標籤與標題
+                // 5. 動態更新網頁的 Meta 標籤與標題
                 if (config['title']) document.title = config['title'];
-                
-                updateMeta('property', 'og:title', config['og:title']);
-                updateMeta('property', 'og:description', config['og:description']);
-                updateMeta('property', 'og:image', config['og:image']);
-                updateMeta('property', 'og:url', config['og:url']);
+                if (config['og:title']) updateMeta('property', 'og:title', config['og:title']);
+                if (config['og:description']) updateMeta('property', 'og:description', config['og:description']);
+                if (config['og:image']) updateMeta('property', 'og:image', config['og:image']);
+                if (config['og:url']) updateMeta('property', 'og:url', config['og:url']);
 
-                // 5. 設定你的變數
+                // 6. 設定你的變數
                 const MyGtUrl = config['og:url'] || 'https://janjan20170423-ai.github.io/pos-system/';
                 const FbShurl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(MyGtUrl);
 
@@ -115,9 +51,9 @@ const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/t
                 console.log("MyGtUrl:", MyGtUrl);
                 console.log("FbShurl:", FbShurl);
                 
-                // 如果畫面有文字需要更新，也可以在這裡處理
-                document.getElementById('app-title').innerText = config['title'] || '好點點餐系統';
-                document.getElementById('app-desc').innerText = config['og:description'] || '歡迎使用';
+                // 動態更新畫面上的文字
+                if (config['title']) document.getElementById('app-title').innerText = config['title'];
+                if (config['og:description']) document.getElementById('app-desc').innerText = config['og:description'];
             })
             .catch(error => console.error("讀取試算表失敗:", error));
 
@@ -134,60 +70,12 @@ const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/t
                 document.head.appendChild(element);
             }
         }
-
-        
-        
-        let originalHTMLTemplate = ""; // 用來存放抓取到的原始 HTML 字串
-
-        // 網頁一開啟，自動去抓取同目錄下的 ManageMenu.html
-        window.addEventListener('DOMContentLoaded', () => {
-            fetch('ManageMenu.html')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('找不到 ManageMenu.html 檔案，請確認檔案存在。');
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    originalHTMLTemplate = data;
-                    document.getElementById('loadStatus').innerText = "✅ 成功載入 ManageMenu.html 範本！";
-                    
-                    // 這裡預設填入你原本想改的初始文字（你可以自己改掉）
-                    document.getElementById('inputTitle').value = "管理選單系統";
-                    document.getElementById('inputHeading').value = "歡迎使用管理後台";
-                })
-                .catch(error => {
-                    document.getElementById('loadStatus').style.backgroundColor = "#ffebee";
-                    document.getElementById('loadStatus').style.color = "#c62828";
-                    document.getElementById('loadStatus').innerText = "❌ 錯誤: " + error.message;
-                });
-        });
-
-        // 執行替換並下載
-        function saveAndDownload() {
-            if (!originalHTMLTemplate) {
-                alert("尚未成功載入原始範本，請稍候再試。");
-                return;
-            }
-
-            const newTitle = document.getElementById('inputTitle').value;
-            const newHeading = document.getElementById('inputHeading').value;
-
-            let modifiedHTML = originalHTMLTemplate;
-
-            // 【關鍵修改點】
-            // 這裡會用 JavaScript 的 replace 功能，把你原本 ManageMenu.html 裡「固定的字串」換成「輸入框的新字」
-            // 請把下面的 "舊標題"、"舊H1文字" 換成你 ManageMenu.html 裡面實際存在的文字！
-            modifiedHTML = modifiedHTML.replace("<title>舊標題</title>", `<title>${newTitle}</title>`);
-            modifiedHTML = modifiedHTML.replace("<h1>舊H1文字</h1>", `<h1>${newHeading}</h1>`);
-
-            // 產生下載檔案
-            const blob = new Blob([modifiedHTML], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'ManageMenu.html'; // 下載覆蓋原本的檔名
-            a.click();
-        }
     </script>
+</head>
+<body>
+
+    <h1 id="app-title">好點點餐系統</h1>
+    <p id="app-desc">歡迎使用</p>
+
 </body>
 </html>
