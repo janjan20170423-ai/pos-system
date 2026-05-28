@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ManageMenu.html 欄位修改器</title>
+<title>點餐系統載入中...</title>
+    <meta property="og:title" content="好點 POS 點餐推播">
+    <meta property="og:description" content="歡迎使用">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
     <style>
         body {
             font-family: 'Microsoft JhengHei', Arial, sans-serif;
@@ -53,7 +57,8 @@
     </style>
 </head>
 <body>
-
+<h1 id="app-title">好點點餐系統</h1>
+    <p id="app-desc">歡迎使用</p>
     <div class="container">
         <h2>✍️ 修改 ManageMenu.html 固定資料</h2>
         <div class="status" id="loadStatus">⏳ 正在載入原始 ManageMenu.html 範本...</div>
@@ -68,6 +73,69 @@
     </div>
 
     <script>
+// 1. 設定你的 Google 試算表 ID
+        const SPREADSHEET_ID = '1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw';
+        
+// 2. 設定你要指定的工作表名稱（例如：選單設定、Sheet2）
+const SHEET_NAME = 'Fbsh'; 
+
+// 3. 組合完整的動態網址
+const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        // 3. 透過 JavaScript 異步抓取試算表資料
+        fetch(jsonUrl)
+            .then(response => response.text())
+            .then(data => {
+                // 清理 Google 回傳的 JSONP 格式字串，轉換為純 JSON
+                const jsonString = data.substring(data.indexOf("{"), data.lastIndexOf("}") + 1);
+                const jsonData = JSON.parse(jsonString);
+                const rows = jsonData.table.rows;
+
+                // 將試算表資料轉換為 Key-Value 物件
+                const config = {};
+                rows.forEach(row => {
+                    const key = row.c[0] ? row.c[0].v : null;
+                    const value = row.c[1] ? row.c[1].v : '';
+                    if (key) config[key.trim()] = value;
+                });
+
+                // 4. 動態更新網頁的 Meta 標籤與標題
+                if (config['title']) document.title = config['title'];
+                
+                updateMeta('property', 'og:title', config['og:title']);
+                updateMeta('property', 'og:description', config['og:description']);
+                updateMeta('property', 'og:image', config['og:image']);
+                updateMeta('property', 'og:url', config['og:url']);
+
+                // 5. 設定你的變數
+                const MyGtUrl = config['og:url'] || 'https://janjan20170423-ai.github.io/pos-system/';
+                const FbShurl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(MyGtUrl);
+
+                console.log("資料更新成功！");
+                console.log("MyGtUrl:", MyGtUrl);
+                console.log("FbShurl:", FbShurl);
+                
+                // 如果畫面有文字需要更新，也可以在這裡處理
+                document.getElementById('app-title').innerText = config['title'] || '好點點餐系統';
+                document.getElementById('app-desc').innerText = config['og:description'] || '歡迎使用';
+            })
+            .catch(error => console.error("讀取試算表失敗:", error));
+
+        // 輔助函式：用來修改或新增 Meta 標籤
+        function updateMeta(attr, value, content) {
+            if (!content) return;
+            let element = document.querySelector(`meta[${attr}="${value}"]`);
+            if (element) {
+                element.setAttribute('content', content);
+            } else {
+                element = document.createElement('meta');
+                element.setAttribute(attr, value);
+                element.setAttribute('content', content);
+                document.head.appendChild(element);
+            }
+        }
+
+        
+        
         let originalHTMLTemplate = ""; // 用來存放抓取到的原始 HTML 字串
 
         // 網頁一開啟，自動去抓取同目錄下的 ManageMenu.html
