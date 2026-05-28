@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>點餐系統載入中...</title>
-    <meta property="og:title" content="好點 POS 點餐推播">
-    <meta property="og:description" content="歡迎使用">
-    <meta property="og:image" content="">
-    <meta property="og:url" content="">
+<title>好點點餐系統</title>
+    <!-- 從試算表動態讀取 Open Graph Meta 標籤 -->
+    <meta property="og:title" content="<?= config['og:title'] ?>">
+    <meta property="og:description" content="<?= config['og:description'] ?>">
+    <meta property="og:image" content="<?= config['og:image'] ?>">
+    <meta property="og:url" content="<?= config['og:url'] ?>">
     <style>
         body {
             font-family: 'Microsoft JhengHei', Arial, sans-serif;
