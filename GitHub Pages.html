@@ -1,81 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>好點點餐系統</title>
-    <meta property="og:title" content="好點 POS 點餐推播">
-    <meta property="og:description" content="歡迎使用">
-    <meta property="og:image" content="https://janjan20170423-ai.github.io/pos-system/2026-05-28 15.41.19 janjan20170423-ai.github.io 47785fec6c5b1.jpg">
-    <meta property="og:url" content="https://janjan20170423-ai.github.io/pos-system/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drawer 抽屜組件測試</title>
+  <style>
+    /* 基礎頁面樣式 */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f5f7fa;
+      margin: 0;
+    }
+    .content-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #409eff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #66b1ff;
+    }
 
-    <script>
-        // 2. 設定你的 Google 試算表 ID 與工作表名稱
-        const SPREADSHEET_ID = '1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw';
-        const SHEET_NAME = 'Fbsh'; 
+    /* ========================================== */
+    /* 核心 Drawer 樣式 */
+    /* ========================================== */
 
-        // 3. 組合完整的動態網址
-        const jsonUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-        
-        // 4. 透過 JavaScript 異步抓取試算表資料
-        fetch(jsonUrl)
-            .then(response => response.text())
-            .then(data => {
-                // 清理 Google 回傳的 JSONP 格式字串，轉換為純 JSON
-                const jsonString = data.substring(data.indexOf("{"), data.lastIndexOf("}") + 1);
-                const jsonData = JSON.parse(jsonString);
-                const rows = jsonData.table.rows;
+    /* 1. 遮罩層（Mask） */
+    .drawer-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-                // 將試算表資料轉換為 Key-Value 物件
-                const config = {};
-                rows.forEach(row => {
-                    // 確保欄位有資料才讀取
-                    const key = row.c[0] ? row.c[0].v : null;
-                    const value = row.c[1] ? row.c[1].v : '';
-                    if (key) config[key.toString().trim()] = value;
-                });
+    /* 2. 抽屜本體（預設隱藏在右側螢幕外） */
+    .drawer-content {
+      position: fixed;
+      top: 0;
+      right: -500px; /* 寬度是 500px，所以往右移 500px 藏起來 */
+      width: 500px;
+      height: 100vh;
+      background-color: white;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* 讓滑出動畫更流暢 */
+    }
 
-                // 5. 動態更新網頁的 Meta 標籤與標題
-                if (config['title']) document.title = config['title'];
-                if (config['og:title']) updateMeta('property', 'og:title', config['og:title']);
-                if (config['og:description']) updateMeta('property', 'og:description', config['og:description']);
-                if (config['og:image']) updateMeta('property', 'og:image', config['og:image']);
-                if (config['og:url']) updateMeta('property', 'og:url', config['og:url']);
+    /* 當激活時的狀態 */
+    .drawer-container.is-open .drawer-mask {
+      opacity: 1;
+      visibility: visible;
+    }
+    .drawer-container.is-open .drawer-content {
+      right: 0; /* 滑入螢幕內 */
+    }
 
-                // 6. 設定你的變數
-                const MyGtUrl = config['og:url'] || 'https://janjan20170423-ai.github.io/pos-system/';
-                const FbShurl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(MyGtUrl);
+    /* 3. 抽屜內部的頁首、頁身、頁尾 */
+    .drawer-header {
+      padding: 20px;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .close-btn:hover {
+      color: #333;
+    }
 
-                console.log("資料更新成功！");
-                console.log("MyGtUrl:", MyGtUrl);
-                console.log("FbShurl:", FbShurl);
-                
-                // 動態更新畫面上的文字
-                if (config['title']) document.getElementById('app-title').innerText = config['title'];
-                if (config['og:description']) document.getElementById('app-desc').innerText = config['og:description'];
-            })
-            .catch(error => console.error("讀取試算表失敗:", error));
+    .drawer-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto; /* 如果內容太多，內部允許滾動 */
+      background-color: #fafafa;
+    }
 
-        // 輔助函式：用來修改或新增 Meta 標籤
-        function updateMeta(attr, value, content) {
-            if (!content) return;
-            let element = document.querySelector(`meta[${attr}="${value}"]`);
-            if (element) {
-                element.setAttribute('content', content);
-            } else {
-                element = document.createElement('meta');
-                element.setAttribute(attr, value);
-                element.setAttribute('content', content);
-                document.head.appendChild(element);
-            }
-        }
-    </script>
+    /* 讓 iframe 充滿整個抽屜身體 */
+    .drawer-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+      border-radius: 4px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+  </style>
 </head>
 <body>
 
-    <h1 id="app-title">好點點餐系統</h1>
-    <p id="app-desc">歡迎使用</p>
+  <div class="content-box">
+    <h2>我的主網頁系統</h2>
+    <p>這是背後的主畫面。當抽屜打開時，你依然看得到左側的內容，不會像 Modal 那樣產生全屏的死板阻擋感。</p>
+    <br>
+    <button id="openDrawerBtn">打開右側抽屜（內嵌網頁）</button>
+  </div>
+
+  <div class="drawer-container" id="myDrawer">
+    <div class="drawer-mask" id="drawerMask"></div>
+    
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3>即時預覽視窗</h3>
+        <button class="close-btn" id="closeDrawerBtn">&times;</button>
+      </div>
+      
+      <div class="drawer-body">
+        <iframe class="drawer-iframe" src="https://example.com"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const openBtn = document.getElementById('openDrawerBtn');
+    const closeBtn = document.getElementById('closeDrawerBtn');
+    const mask = document.getElementById('drawerMask');
+    const drawer = document.getElementById('myDrawer');
+
+    // 打開抽屜：加上 .is-open 類名
+    openBtn.addEventListener('click', () => {
+      drawer.classList.add('is-open');
+      // 選擇性功能：防止背後的主頁面在抽屜打開時還能滾動
+      document.body.style.overflow = 'hidden'; 
+    });
+
+    // 關閉抽屜：移除 .is-open 類名
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      document.body.style.overflow = ''; // 恢復主頁面滾動
+    }
+
+    closeBtn.addEventListener('click', closeDrawer);
+    mask.addEventListener('click', closeDrawer); // 點擊黑色半透明遮罩也能關閉
+  </script>
 
 </body>
 </html>
