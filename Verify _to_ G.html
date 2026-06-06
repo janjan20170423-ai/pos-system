@@ -57,9 +57,9 @@ fetch(sheetUrl)
     // 第2列
     const cols = rows[1].split(",");
 
-    // B2
+    // B3
     const baseUrl =
-        cols[3]?.replace(/"/g,"").trim();
+        cols[2]?.replace(/"/g,"").trim();
 
     const params = new URLSearchParams(window.location.search);
 
