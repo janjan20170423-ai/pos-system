@@ -55,11 +55,11 @@ fetch(sheetUrl)
     const rows = csv.split("\n");
 
     // 第2列
-    const cols = rows[3].split(",");
+    const cols = rows[1].split(",");
 
     // B2
     const baseUrl =
-        cols[1]?.replace(/"/g,"").trim();
+        cols[3]?.replace(/"/g,"").trim();
 
     const params = new URLSearchParams(window.location.search);
 
