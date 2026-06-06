@@ -67,13 +67,12 @@ fetch(sheetUrl)
         if(fileName === "index.html"){
 
             const finalUrl =
-                `${baseUrl}?page=${targetPage}&id=${encodeURIComponent(userId)}`;
+                `${baseUrl}`;
 
             document.getElementById("pageFrame").src =
                 finalUrl;
 
             break;
-            console.log("finalUrl");
         }
     }
 });
