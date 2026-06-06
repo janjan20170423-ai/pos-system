@@ -40,35 +40,34 @@ iframe{
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
 
+const params = new URLSearchParams(window.location.search);
+
+const targetPage =
+    params.get("page") || "";
+
+const userId =
+    params.get("id") || "";
+
 fetch(sheetUrl)
 .then(res => res.text())
 .then(csv => {
 
-    // 分行
     const rows = csv.split("\n");
 
-    // 從第2行開始
     for(let i=1;i<rows.length;i++){
 
         const cols = rows[i].split(",");
 
-        // A欄
         const fileName =
             cols[0]?.replace(/"/g,"").trim();
 
-        // B欄
         const baseUrl =
             cols[1]?.replace(/"/g,"").trim();
 
-        // C欄
-        const page =
-            cols[2]?.replace(/"/g,"").trim();
-
-        // 組合 URL
-        const finalUrl = baseUrl + page;
-
-        // 指定要讀哪個檔案
         if(fileName === "index.html"){
+
+            const finalUrl =
+                `${baseUrl}?page=${targetPage}&id=${encodeURIComponent(userId)}`;
 
             document.getElementById("pageFrame").src =
                 finalUrl;
@@ -76,7 +75,6 @@ fetch(sheetUrl)
             break;
         }
     }
-
 });
 
 </script>
