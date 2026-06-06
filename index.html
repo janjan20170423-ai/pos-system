@@ -54,27 +54,26 @@ fetch(sheetUrl)
 
     const rows = csv.split("\n");
 
-    for(let i=1;i<rows.length;i++){
+    // 第2列
+    const cols = rows[2].split(",");
 
-        const cols = rows[i].split(",");
+    // B2
+    const baseUrl =
+        cols[1]?.replace(/"/g,"").trim();
 
-        const fileName =
-            cols[0]?.replace(/"/g,"").trim();
+    const params = new URLSearchParams(window.location.search);
 
-        const baseUrl =
-            cols[1]?.replace(/"/g,"").trim();
+    const page =
+        params.get("page") || "sidebar";
 
-        if(fileName === "index.html"){
+    const userId =
+        params.get("id") || "";
 
-            const finalUrl =
-                `${baseUrl}`;
+    const finalUrl =
+        `${baseUrl}?page=${page}&id=${encodeURIComponent(userId)}`;
 
-            document.getElementById("pageFrame").src =
-                finalUrl;
-
-            break;
-        }
-    }
+    document.getElementById("pageFrame").src =
+        finalUrl;
 });
     
 </script>
