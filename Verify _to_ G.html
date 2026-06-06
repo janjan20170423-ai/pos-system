@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好點點餐系統</title>
+<meta property="og:title" content="好點 POS 點餐推播">
+
+<meta property="og:description"
+content="歡迎使用">
+
+<meta property="og:image"
+content="https://janjan20170423-ai.github.io/pos-system/2026-05-28 15.41.19 janjan20170423-ai.github.io 47785fec6c5b1.jpg">
+
+<meta property="og:url"
+content="https://janjan20170423-ai.github.io/pos-system/">
+<style>
+html, body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+</style>
+</head>
+
+<body>
+
+<iframe id="pageFrame"></iframe>
+
+<script>
+
+// Google 試算表 CSV
+const sheetUrl =
+"https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
+
+const params = new URLSearchParams(window.location.search);
+
+const targetPage =
+    params.get("page") || "";
+
+const userId =
+    params.get("id") || "";
+
+fetch(sheetUrl)
+.then(res => res.text())
+.then(csv => {
+
+    const rows = csv.split("\n");
+
+    // 第2列
+    const cols = rows[3].split(",");
+
+    // B2
+    const baseUrl =
+        cols[1]?.replace(/"/g,"").trim();
+
+    const params = new URLSearchParams(window.location.search);
+
+    const page =
+        params.get("page") || "";
+
+    const userId =
+        params.get("id") || "";
+
+    const finalUrl =
+        `${baseUrl}?page=${page}&id=${encodeURIComponent(userId)}`;
+
+    document.getElementById("pageFrame").src =
+        finalUrl;
+});
+    
+</script>
+
+</body>
+</html>
