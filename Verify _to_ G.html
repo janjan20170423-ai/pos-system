@@ -54,12 +54,10 @@ fetch(sheetUrl)
 
     const rows = csv.split("\n");
 
-    // 第2列
-    const cols = rows[1].split(",");
 
-    // B3
-    const baseUrl =
-        cols[2]?.replace(/"/g,"").trim();
+    // 第3列(B3)
+const cols = rows[2].split(",");//第3行
+const baseUrl = cols[1]?.replace(/"/g,"").trim();//第2列(B欄)
 
     const params = new URLSearchParams(window.location.search);
 
@@ -74,6 +72,7 @@ fetch(sheetUrl)
 
     document.getElementById("pageFrame").src =
         finalUrl;
+    console.log('連線'pageFrame);
 });
     
 </script>
