@@ -64,18 +64,26 @@ console.log("targetPage =", targetPage);
         const baseUrl =
             cols[1]?.replace(/"/g,"").trim();
 console.log("fileName =", fileName);
-        if(fileName === targetPage){
+if(fileName === targetPage){
 
-            const finalUrl =
-                `${baseUrl}?page=${page}&id=${encodeURIComponent(userId)}`;
+    let finalUrl = baseUrl;
 
-            console.log(finalUrl);
+    if(fileName === "Verify_to_G"){
 
-            document.getElementById("pageFrame").src =
-                finalUrl;
+        finalUrl +=
+            `?id=${encodeURIComponent(userId)}`;
 
-            break;
-        }
+    }else if(pageValue){
+
+        finalUrl +=
+            `?page=${pageValue}&id=${encodeURIComponent(userId)}`;
+    }
+
+    document.getElementById("pageFrame").src =
+        finalUrl;
+
+    break;
+}
     }
 
 });
