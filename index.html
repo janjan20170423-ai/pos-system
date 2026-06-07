@@ -44,28 +44,39 @@ const params = new URLSearchParams(window.location.search);
 
 const targetPage =
     params.get("page") || "";
+    
 
-for(let i=1;i<rows.length;i++){
+fetch(sheetUrl)
+.then(res => res.text())
+.then(csv => {
 
-    const cols = rows[i].split(",");
+    const rows = csv.split("\n");
+console.log("targetPage =", targetPage);
+    for(let i=1;i<rows.length;i++){
 
-    const fileName =
-        cols[0]?.replace(/"/g,"").trim();
+        const cols = rows[i].split(",");
 
-    const baseUrl =
-        cols[1]?.replace(/"/g,"").trim();
+        const fileName =
+            cols[0]?.replace(/"/g,"").trim();
 
-    if(fileName === targetPage){
+        const baseUrl =
+            cols[1]?.replace(/"/g,"").trim();
+console.log("fileName =", fileName);
+        if(fileName === targetPage){
 
-        const finalUrl =
-            `${baseUrl}?id=${encodeURIComponent(userId)}`;
+            const finalUrl =
+                `${baseUrl}?id=${encodeURIComponent(userId)}`;
 
-        document.getElementById("pageFrame").src =
-            finalUrl;
+            console.log(finalUrl);
 
-        break;
+            document.getElementById("pageFrame").src =
+                finalUrl;
+
+            break;
+        }
     }
-}
+
+});
 </script>
 
 </body>
