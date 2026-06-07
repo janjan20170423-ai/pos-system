@@ -40,53 +40,78 @@ iframe{
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
 
+// 取得網址參數
 const params = new URLSearchParams(window.location.search);
 
 const targetPage =
-    params.get("page") || "";
+    params.get("page") || "index";
 
 const userId =
     params.get("id") || "";
-    
+
+console.log("targetPage =", targetPage);
+console.log("userId =", userId);
+
+// 讀取試算表
 fetch(sheetUrl)
 .then(res => res.text())
 .then(csv => {
 
     const rows = csv.split("\n");
-console.log("targetPage =", targetPage);
-    for(let i=1;i<rows.length;i++){
+
+    for(let i = 1; i < rows.length; i++){
 
         const cols = rows[i].split(",");
 
+        // A欄：檔名
         const fileName =
             cols[0]?.replace(/"/g,"").trim();
 
+        // B欄：Apps Script URL
         const baseUrl =
             cols[1]?.replace(/"/g,"").trim();
-console.log("fileName =", fileName);
-if(fileName === targetPage){
 
-    let finalUrl = baseUrl;
+        // C欄：page參數
+        const pageValue =
+            cols[2]?.replace(/"/g,"").trim();
 
-    if(fileName === "Verify_to_G"){
+        console.log("fileName =", fileName);
 
-        finalUrl +=
-            `?id=${encodeURIComponent(userId)}`;
+        if(fileName === targetPage){
 
-    }else if(pageValue){
+            let finalUrl = baseUrl;
 
-        finalUrl +=
-            `?page=${pageValue}&id=${encodeURIComponent(userId)}`;
+            // Verify_to_G：只帶 id
+            if(fileName === "Verify_to_G"){
+
+                finalUrl +=
+                    `?id=${encodeURIComponent(userId)}`;
+
+            }
+
+            // sidebar、ManageMenu、Design、O_Menu
+            else if(pageValue){
+
+                finalUrl +=
+                    `${pageValue}&id=${encodeURIComponent(userId)}`;
+            }
+
+            // index 不加任何參數
+
+            console.log("finalUrl =", finalUrl);
+
+            document.getElementById("pageFrame").src =
+                finalUrl;
+
+            break;
+        }
     }
 
-    document.getElementById("pageFrame").src =
-        finalUrl;
-
-    break;
-}
-    }
-
+})
+.catch(error => {
+    console.error("讀取試算表失敗：", error);
 });
+
 </script>
 
 </body>
