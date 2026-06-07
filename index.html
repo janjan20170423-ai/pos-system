@@ -44,8 +44,10 @@ const params = new URLSearchParams(window.location.search);
 
 const targetPage =
     params.get("page") || "";
-    
 
+const userId =
+    params.get("id") || "";
+    
 fetch(sheetUrl)
 .then(res => res.text())
 .then(csv => {
