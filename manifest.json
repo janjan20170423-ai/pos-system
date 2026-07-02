@@ -1,7 +1,7 @@
 ﻿﻿{
   "name": "點餐系統",
   "short_name": "點餐",
-  "start_url": "/pos-system/index.html",
+  "start_url": "/pos-system/index1.html",
   "scope": "/pos-system/",
   "display": "standalone",
   "background_color": "#ffffff",
