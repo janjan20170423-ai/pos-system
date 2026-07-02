@@ -1,7 +1,7 @@
 ﻿const CACHE_NAME = "order-app-cache-v1";
 const urlsToCache = [
   "/pos-system/",
-  "/pos-system/index.html",
+  "/pos-system/index1.html",
   "/pos-system/manifest.json",
   "/pos-system/icon.png"
 ];
