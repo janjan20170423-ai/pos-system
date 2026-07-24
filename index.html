@@ -49,7 +49,11 @@ const targetPage =
 
 const userId =
     params.get("id") || "";
+    
+const tier =
+    params.get("tier") || "";
 
+console.log("tier =", tier);
 console.log("targetPage =", targetPage);
 console.log("userId =", userId);
 
@@ -94,7 +98,9 @@ fetch(sheetUrl)
             else if(pageValue){
 
                 finalUrl +=
-                    `${pageValue}&id=${encodeURIComponent(userId)}`;
+        `${pageValue}` +
+        `&id=${encodeURIComponent(userId)}` +
+        `&tier=${encodeURIComponent(tier)}`;
             }
 
             // index 不加任何參數
