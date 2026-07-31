@@ -52,10 +52,14 @@ const userId =
     
 const tier =
     params.get("tier") || "";
+    
+const provider =
+    params.get("provider") || "";
 
 console.log("tier =", tier);
 console.log("targetPage =", targetPage);
 console.log("userId =", userId);
+console.log("provider =", provider);
 
 // 讀取試算表
 fetch(sheetUrl)
@@ -100,7 +104,8 @@ fetch(sheetUrl)
                 finalUrl +=
         `${pageValue}` +
         `&id=${encodeURIComponent(userId)}` +
-        `&tier=${encodeURIComponent(tier)}`;
+        `&tier=${encodeURIComponent(tier)}` +
+        `&provider=${encodeURIComponent(provider)}`;
             }
 
             // index 不加任何參數
