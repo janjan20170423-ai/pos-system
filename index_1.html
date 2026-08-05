@@ -45,13 +45,13 @@ html, body{
 }
 
 #qaDrawer.open{
-  width:420px;       /* 展開寬度：可自行調 */
+  width:300px;       /* 展開寬度：可自行調 */
   background: transparent;
 }
 
 /* 抽屜裡真正顯示的 iframe */
 #qaFrame{
-  width:420px;       /* 跟 open 的 width 一致比較好 */
+  width:300px;       /* 跟 open 的 width 一致比較好 */
   height:100%;
   border:none;
   box-shadow: -6px 0 18px rgba(0,0,0,0.25);
@@ -60,12 +60,32 @@ html, body{
 }
 
 /* 右下角或右側收合/展開按鈕（可選） */
-#qaToggle{
-  position:fixed;
-  right:12px;
-  bottom:12px;
-  z-index:10000;
+    #qaToggle {
+    right: 12px;
+    position: fixed;
+    left: 10px;
+    bottom: 250px;
+    z-index: 999;
+
+    width: 60px;
+    height: 60px;
+    background-color: #eee;
+    color: #777;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+    border: 0px solid #ddd;    
 }
+    #qaToggle img{
+        width:18px; 
+        height:18px;
+    }
 </style>
 </head>
 
@@ -73,7 +93,11 @@ html, body{
 
   <iframe id="pageFrame" src="about:blank"></iframe>
 
-  <button id="qaToggle" type="button">QA</button>
+  <button id="qaToggle" type="button" aria-label="提問專區">
+  <img src="https://cdn-icons-png.flaticon.com/512/2784/2784530.png"
+       alt="提問專區">
+  <span>提問專區</span>
+</button>
 
   <div id="qaDrawer">
     <iframe
