@@ -29,13 +29,36 @@ iframe{
     height:100%;
     border:none;
 }
+    /* 🔹 iframe 基本樣式 */
+    #qaFrame {
+      position: fixed;   /* 固定在畫面 */
+      bottom: 20px;      /* 距離底部 20px */
+      right: 20px;       /* 距離右邊 20px */
+      width: 400px;      /* iframe 寬度 */
+      height: 300px;     /* iframe 高度 */
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 9999;     /* 確保在最上層 */
+    }
+
+    /* 🔹 可選：hover 時放大效果 */
+    #qaFrame:hover {
+      transform: scale(1.02);
+      transition: transform 0.2s ease-in-out;
+    }    
 </style>
 </head>
 
 <body>
 
 <iframe id="pageFrame"></iframe>
-
+  <!-- 🔹 固定懸浮 iframe -->
+  <iframe 
+    id="qaFrame"
+    src="https://script.google.com/macros/s/AKfycbxOwhSU7GaibGHNwatZFfylX0kg8Rh8fgaMjvVFheHv1cTzO5UnbG-B9_YIjpdShS2W_w/exec?id=12345689"
+    frameborder="0">
+  </iframe>
 <script>
 
 // Google 試算表 CSV
