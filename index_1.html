@@ -18,47 +18,62 @@ content="https://janjan20170423-ai.github.io/pos-system/2026-05-28 15.41.19 janj
 content="https://janjan20170423-ai.github.io/pos-system/">
 <style>
 html, body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
 }
 
 iframe{
-    width:100%;
-    height:100%;
-    border:none;
+  width:100%;
+  height:100%;
+  border:none;
 }
-    /* 🔹 iframe 基本樣式 */
-    #qaFrame {
-      position: fixed;   /* 固定在畫面 */
-      bottom: 20px;      /* 距離底部 20px */
-      right: 20px;       /* 距離右邊 20px */
-      width: 400px;      /* iframe 寬度 */
-      height: 300px;     /* iframe 高度 */
-      border: 2px solid #4CAF50;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 9999;     /* 確保在最上層 */
-    }
 
-    /* 🔹 可選：hover 時放大效果 */
-    #qaFrame:hover {
-      transform: scale(1.02);
-      transition: transform 0.2s ease-in-out;
-    }    
+/* POS iframe */
+#pageFrame{
+  position: relative;
+  z-index: 1;
+}
+
+/* QA 外層：不擋 POS 點擊 */
+#qaWidget{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none; /* 關鍵：外層不吃點 */
+}
+
+/* QA 卡片本體：允許點擊 */
+#qaFrame{
+  width: 400px;
+  height: 300px;
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  pointer-events: auto; /* 關鍵：只讓 iframe 可點 */
+}
+
+/* 不建議 hover scale，否則會擴大蓋到 POS */
+#qaFrame:hover{
+  transition: transform 0.2s ease-in-out;
+  /* 乾脆拿掉 transform */
+}
 </style>
 </head>
 
 <body>
 
-<iframe id="pageFrame"></iframe>
-  <!-- 🔹 固定懸浮 iframe -->
-  <iframe 
-    id="qaFrame"
-    src="https://script.google.com/macros/s/AKfycbxOwhSU7GaibGHNwatZFfylX0kg8Rh8fgaMjvVFheHv1cTzO5UnbG-B9_YIjpdShS2W_w/exec?id=12345689"
-    frameborder="0">
-  </iframe>
+  <iframe id="pageFrame"></iframe>
+
+  <div id="qaWidget">
+    <iframe
+      id="qaFrame"
+      src="https://script.google.com/macros/s/AKfycbxOwhSU7GaibGHNwatZFfylX0kg8Rh8fgaMjvVFheHv1cTzO5UnbG-B9_YIjpdShS2W_w/exec?id=12345689"
+      frameborder="0">
+    </iframe>
+  </div>
 <script>
 
 // Google 試算表 CSV
