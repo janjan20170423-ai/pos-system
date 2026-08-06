@@ -64,7 +64,7 @@ html, body{
     right: 12px;
     position: fixed;
     left: 10px;
-    bottom: 250px;
+    bottom: 450px;
     z-index: 999;
 
     width: 60px;
@@ -96,7 +96,7 @@ color: #fff;
 
 <body>
 
-  <iframe id="pageFrame" src="about:blank"></iframe>
+  <iframe id="pageFrame"></iframe>
 
   <button id="qaToggle" type="button" aria-label="提問專區">
   <img src="https://cdn-icons-png.flaticon.com/512/2784/2784530.png"
@@ -105,11 +105,7 @@ color: #fff;
 </button>
 
   <div id="qaDrawer">
-    <iframe
-      id="qaFrame"
-      src="https://script.google.com/macros/s/AKfycbxOwhSU7GaibGHNwatZFfylX0kg8Rh8fgaMjvVFheHv1cTzO5UnbG-B9_YIjpdShS2W_w/exec?id=12345689"
-      frameborder="0">
-    </iframe>
+    <iframe id="qaFrame" frameborder="0"></iframe>
   </div>
 <script>
 
@@ -194,6 +190,8 @@ fetch(sheetUrl)
             console.log("finalUrl =", finalUrl);
 
             document.getElementById("pageFrame").src =
+                finalUrl;
+            document.getElementById("qaFrame").src =
                 finalUrl;
 
             break;
