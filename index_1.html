@@ -173,6 +173,9 @@ fetch(sheetUrl)
             // Verify_to_G：只帶 id
             if(fileName === "Verify_to_G"){
 
+            console.log("userId from URLV =", userId);
+            document.getElementById("qaFrame").src =
+                `${qaUrl}` + `?id=${encodeURIComponent(userId)}`;
                 finalUrl +=
                     `?id=${encodeURIComponent(userId)}`;
 
@@ -181,6 +184,9 @@ fetch(sheetUrl)
             // sidebar、ManageMenu、Design、O_Menu
             else if(pageValue){
 
+            console.log("userId from URL4 =", userId);
+            document.getElementById("qaFrame").src =
+                `${qaUrl}` + `?id=${encodeURIComponent(userId)}`;
                 finalUrl +=
         `${pageValue}` +
         `&id=${encodeURIComponent(userId)}` +
