@@ -194,8 +194,9 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
+            console.log("userId from URL =", userId);
             document.getElementById("qaFrame").src =
-                `${qaUrl}?id=${encodeURIComponent(userId)}`;
+                `${qaUrl}` + `?id=${encodeURIComponent(userId)}`;
 
             break;
         }
