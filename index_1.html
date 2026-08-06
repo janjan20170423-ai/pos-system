@@ -112,9 +112,6 @@ color: #fff;
 // Google 試算表 CSV
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
-// qa_url
-const qaUrl =
-"https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
 
 // 取得網址參數
 const params = new URLSearchParams(window.location.search);
@@ -194,9 +191,6 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
-            document.getElementById("qaFrame").src =
-                qaUrl +=
-        `&id=${encodeURIComponent(userId)}`;
 
             break;
         }
@@ -206,7 +200,14 @@ fetch(sheetUrl)
 .catch(error => {
     console.error("讀取試算表失敗：", error);
 });
+  // qa_url
+  const qaUrl =
+    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
 
+  // 讓 QA iframe 帶入 userId
+  const qaFrame = document.getElementById("qaFrame");
+  qaFrame.src =
+    `${qaUrl}?id=${encodeURIComponent(userId)}`;
 </script>
 
 </body>
