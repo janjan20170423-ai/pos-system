@@ -115,17 +115,14 @@ const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
 
 // 取得網址參數
-const params = new URLSearchParams(location.search);
+const params = new URLSearchParams(window.location.search);
 
-
-const userId =
-    params.get("id") ||
-    sessionStorage.getItem("userId") ||
-    "";    
 const targetPage =
     params.get("page") || "index";
 
-//const userId = params.get("id") || "";    
+const userId =
+    params.get("id") || "";
+    
 const tier =
     params.get("tier") || "";
     
@@ -179,12 +176,19 @@ fetch(sheetUrl)
             if(fileName === "Verify_to_G"){
                 finalUrl +=
                     `?id=${encodeURIComponent(userId)}`;
-
+        if(fileName === targetPage){
+            let qrUrl = baseUrl;
+            if(fileName === "qrb"){
+                qrUrl +=
+                    `?id=${encodeURIComponent(userId)}`;
+            }
+        }
             }
 
             // sidebar、ManageMenu、Design、O_Menu
             else if(pageValue){
-
+                qrUrl +=
+                    `?id=${encodeURIComponent(userId)}`;
                 finalUrl +=
         `${pageValue}` +
         `&id=${encodeURIComponent(userId)}` +
@@ -198,6 +202,8 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
+            document.getElementById("pageFrame").src =
+    qrUrl += `?id=${encodeURIComponent(userId)}`;
 
             break;
         }
@@ -207,15 +213,7 @@ fetch(sheetUrl)
 .catch(error => {
     console.error("讀取試算表失敗：", error);
 });
-  // qa_url
-  const qaUrl =
-    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
 
-  // 讓 QA iframe 帶入 userId
-    //console.log("userId from URL =", userId);
-  const qaFrame = document.getElementById("qaFrame");
-  qaFrame.src =
-    `${qaUrl}?id=${encodeURIComponent(userId)}`;
 </script>
 
 </body>
