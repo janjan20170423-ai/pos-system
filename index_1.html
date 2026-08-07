@@ -189,14 +189,6 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
-
-        const qaUrl =
-    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
-
-  // 讓 QA iframe 帶入 userId
-  const qaFrame = document.getElementById("qaFrame");
-  qaFrame.src =
-    `${qaUrl}?id=${encodeURIComponent(userId)}`;
             break;
         }
     }
@@ -205,6 +197,14 @@ fetch(sheetUrl)
 .catch(error => {
     console.error("讀取試算表失敗：", error);
 });
+
+        const qaUrl =
+    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
+
+  // 讓 QA iframe 帶入 userId
+  const qaFrame = document.getElementById("qaFrame");
+  qaFrame.src =
+    `${qaUrl}?id=${encodeURIComponent(userId)}`;
 
 </script>
 
