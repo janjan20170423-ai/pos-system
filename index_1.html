@@ -114,16 +114,20 @@ const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
 
 // 取得網址參數
-const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(location.search);
 
+if(userId){
+    sessionStorage.setItem("userId", userId);
+}
+
+const userId =
+    params.get("id") ||
+    sessionStorage.getItem("userId") ||
+    "";    
 const targetPage =
     params.get("page") || "index";
 
-//const userId = params.get("id") || "";
-const userId =
-    params.get("id") ||
-    localStorage.getItem("userId") ||
-    "";    
+//const userId = params.get("id") || "";    
 const tier =
     params.get("tier") || "";
     
