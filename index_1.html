@@ -139,10 +139,6 @@ console.log("provider =", provider);
     btn.addEventListener('click', () => {
       drawer.classList.toggle('open');
     });
-
-if(userId){
-    sessionStorage.setItem("userId", userId);
-}    
 // 讀取試算表
 fetch(sheetUrl)
 .then(res => res.text())
@@ -176,17 +172,10 @@ fetch(sheetUrl)
             if(fileName === "Verify_to_G"){
                 finalUrl +=
                     `?id=${encodeURIComponent(userId)}`;
-            let qrUrl = baseUrl;
-            if(fileName === "qrb"){
-                qrUrl +=
-                    `?id=${encodeURIComponent(userId)}`;
-            }
             }
 
             // sidebar、ManageMenu、Design、O_Menu
             else if(pageValue){
-                qrUrl +=
-                    `?id=${encodeURIComponent(userId)}`;
                 finalUrl +=
         `${pageValue}` +
         `&id=${encodeURIComponent(userId)}` +
@@ -200,11 +189,16 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
-            document.getElementById("qaFrame").src =
-    qrUrl += `?id=${encodeURIComponent(userId)}`;
 
             break;
         }
+        const qaUrl =
+    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
+
+  // 讓 QA iframe 帶入 userId
+  const qaFrame = document.getElementById("qaFrame");
+  qaFrame.src =
+    `${qaUrl}?id=${encodeURIComponent(userId)}`;
     }
 
 })
