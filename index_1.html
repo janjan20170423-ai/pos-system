@@ -122,9 +122,11 @@ const params = new URLSearchParams(window.location.search);
 const targetPage =
     params.get("page") || "index";
 
+//const userId = params.get("id") || "";
 const userId =
-    params.get("id") || "";
-    
+    params.get("id") ||
+    localStorage.getItem("userId") ||
+    "";    
 const tier =
     params.get("tier") || "";
     
