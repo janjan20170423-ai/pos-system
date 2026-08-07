@@ -113,7 +113,15 @@ console.log("Query：", location.search);
 // Google 試算表 CSV
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
-
+// 🎯 監聽來自內嵌 iframe (GAS) 送過來的訊息
+  window.addEventListener("message", function(event) {
+    // 檢查是否有收到的訊息與目標 URL
+    if (event.data && event.data.type === "NAVIGATE_TOP" && event.data.url) {
+      console.log("收到轉址請求，準備跳轉至：", event.data.url);
+      // 由 GitHub 自己的主視窗執行轉址，就不會被沙盒阻擋！
+      window.location.href = event.data.url;
+    }
+  });
 // 取得網址參數
 const params = new URLSearchParams(window.location.search);
 
