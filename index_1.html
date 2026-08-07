@@ -176,13 +176,11 @@ fetch(sheetUrl)
             if(fileName === "Verify_to_G"){
                 finalUrl +=
                     `?id=${encodeURIComponent(userId)}`;
-        if(fileName === targetPage){
             let qrUrl = baseUrl;
             if(fileName === "qrb"){
                 qrUrl +=
                     `?id=${encodeURIComponent(userId)}`;
             }
-        }
             }
 
             // sidebar、ManageMenu、Design、O_Menu
