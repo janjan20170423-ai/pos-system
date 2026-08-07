@@ -136,7 +136,7 @@ const provider =
 
 console.log("tier =", tier);
 console.log("targetPage =", targetPage);
-console.log("userId =", userId);
+//console.log("userId =", userId);
 console.log("provider =", provider);
     const drawer = document.getElementById('qaDrawer');
     const btn = document.getElementById('qaToggle');
@@ -210,7 +210,7 @@ fetch(sheetUrl)
     "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
 
   // 讓 QA iframe 帶入 userId
-    console.log("userId from URL =", userId);
+    //console.log("userId from URL =", userId);
   const qaFrame = document.getElementById("qaFrame");
   qaFrame.src =
     `${qaUrl}?id=${encodeURIComponent(userId)}`;
