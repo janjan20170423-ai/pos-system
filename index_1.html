@@ -190,8 +190,6 @@ fetch(sheetUrl)
             document.getElementById("pageFrame").src =
                 finalUrl;
 
-            break;
-        }
         const qaUrl =
     "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
 
@@ -199,6 +197,8 @@ fetch(sheetUrl)
   const qaFrame = document.getElementById("qaFrame");
   qaFrame.src =
     `${qaUrl}?id=${encodeURIComponent(userId)}`;
+            break;
+        }
     }
 
 })
