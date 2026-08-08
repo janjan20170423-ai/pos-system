@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
+<meta charset="UTF-8">
     <link rel="icon" type="image/png" href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.ryKm2keuRa-_2ydvnGUsVgAAAA%3Fr%3D0%26pid%3DApi&f=1&ipt=9ecef78e0455661433179a352def747d41c8bb05ad1812968d455168d97d7c3b&ipo=images">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>享點 POS 點餐系統</title>
@@ -17,30 +18,110 @@ content="https://janjan20170423-ai.github.io/pos-system/2026-05-28 15.41.19 janj
 content="https://janjan20170423-ai.github.io/pos-system/">
 <style>
 html, body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
 }
 
-iframe{
-    width:100%;
-    height:100%;
-    border:none;
+#pageFrame{
+  position:absolute;
+  inset:0;           /* 全螢幕 POS */
+  border:none;
+  width:100%;
+  height:100%;
 }
+
+#qaDrawer{
+  position:fixed;
+  top:0;
+  right:0;
+  height:100vh;
+  width:0;           /* 收合時不佔空間 */
+  z-index:9999;
+  transition: width 220ms ease;
+  background: transparent;
+  overflow:hidden;
+}
+
+#qaDrawer.open{
+  width:300px;       /* 展開寬度：可自行調 */
+  background: transparent;
+}
+
+/* 抽屜裡真正顯示的 iframe */
+#qaFrame{
+  width:300px;       /* 跟 open 的 width 一致比較好 */
+  height:100%;
+  border:none;
+  box-shadow: -6px 0 18px rgba(0,0,0,0.25);
+  background:#fff;
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+/* 右下角或右側收合/展開按鈕（可選） */
+    #qaToggle {
+    right: 12px;
+    position: fixed;
+    left: 10px;
+    bottom: 450px;
+    z-index: 999;
+
+    width: 60px;
+    height: 60px;
+    background-color: #eee;
+    color: #777;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+    border: 0px solid #ddd;    
+}
+    #qaToggle:hover {
+  transform: scale(1.05);
+  background-color: #333;
+color: #fff;
+}
+    #qaToggle img{
+        width:35px; 
+        height:35px;
+    }
 </style>
 </head>
 
 <body>
 
-<iframe id="pageFrame"></iframe>
+  <iframe id="pageFrame"></iframe>
 
+  <button id="qaToggle" type="button" aria-label="提問專區">
+  <img src="https://cdn-icons-png.flaticon.com/512/2784/2784530.png"
+       alt="提問專區">
+  <span>提問專區</span>
+</button>
+
+  <div id="qaDrawer">
+    <iframe id="qaFrame" frameborder="0"></iframe>
+  </div>
 <script>
-
+console.log("網址：", location.href);
+console.log("Query：", location.search);
 // Google 試算表 CSV
 const sheetUrl =
 "https://docs.google.com/spreadsheets/d/1IIkNNVsf2vL6YM4tbCK80UPcHjHlrK6bXiIKP-e1qsw/gviz/tq?tqx=out:csv";
-
+// 🎯 監聽來自內嵌 iframe (GAS) 送過來的訊息
+  window.addEventListener("message", function(event) {
+    // 檢查是否有收到的訊息與目標 URL
+    if (event.data && event.data.type === "NAVIGATE_TOP" && event.data.url) {
+      console.log("收到轉址請求，準備跳轉至：", event.data.url);
+      // 由 GitHub 自己的主視窗執行轉址，就不會被沙盒阻擋！
+      window.location.href = event.data.url;
+    }
+  });
 // 取得網址參數
 const params = new URLSearchParams(window.location.search);
 
@@ -58,9 +139,14 @@ const provider =
 
 console.log("tier =", tier);
 console.log("targetPage =", targetPage);
-console.log("userId =", userId);
+//console.log("userId =", userId);
 console.log("provider =", provider);
+    const drawer = document.getElementById('qaDrawer');
+    const btn = document.getElementById('qaToggle');
 
+    btn.addEventListener('click', () => {
+      drawer.classList.toggle('open');
+    });
 // 讀取試算表
 fetch(sheetUrl)
 .then(res => res.text())
@@ -92,15 +178,12 @@ fetch(sheetUrl)
 
             // Verify_to_G：只帶 id
             if(fileName === "Verify_to_G"){
-
                 finalUrl +=
                     `?id=${encodeURIComponent(userId)}`;
-
             }
 
             // sidebar、ManageMenu、Design、O_Menu
             else if(pageValue){
-
                 finalUrl +=
         `${pageValue}` +
         `&id=${encodeURIComponent(userId)}` +
@@ -114,7 +197,6 @@ fetch(sheetUrl)
 
             document.getElementById("pageFrame").src =
                 finalUrl;
-
             break;
         }
     }
@@ -123,6 +205,14 @@ fetch(sheetUrl)
 .catch(error => {
     console.error("讀取試算表失敗：", error);
 });
+
+        const qaUrl =
+    "https://script.google.com/macros/s/AKfycbylx2PgjSYS6LubkT0qtOi-h018dq3VMKxkuKga77lEGlGWUDbPicQo45c8anreYBWlsw/exec";
+
+  // 讓 QA iframe 帶入 userId
+  const qaFrame = document.getElementById("qaFrame");
+  qaFrame.src =
+    `${qaUrl}?id=${encodeURIComponent(userId)}`;
 
 </script>
 
